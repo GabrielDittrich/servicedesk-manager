@@ -22,7 +22,9 @@ namespace ServiceDesk.Api.Controllers
         {
             var chamados = _chamadoService.Listar();
 
-            return Ok(chamados);
+            var response = chamados.Select(MapearParaResponse).ToList();
+
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -35,7 +37,9 @@ namespace ServiceDesk.Api.Controllers
                 return NotFound("Chamado não encontrado.");
             }
 
-            return Ok(chamado);
+            var response = MapearParaResponse(chamado);
+
+            return Ok(response);
         }
 
         [HttpPost]
@@ -72,7 +76,9 @@ namespace ServiceDesk.Api.Controllers
 
             _chamadoService.Criar(chamado);
 
-            return CreatedAtAction(nameof(BuscarPorId), new { id = chamado.Id }, chamado);
+            var response = MapearParaResponse(chamado);
+
+            return CreatedAtAction(nameof(BuscarPorId), new { id = chamado.Id }, response);
         }
 
         [HttpPatch("{id}/status")]
@@ -103,6 +109,24 @@ namespace ServiceDesk.Api.Controllers
             _chamadoService.AlterarStatus(id, StatusChamado.Cancelado, chamado.TecnicoResponsavelId);
 
             return NoContent();
+        }
+
+        private static ChamadoResponse MapearParaResponse(Chamado chamado)
+        {
+            return new ChamadoResponse
+            {
+                Id = chamado.Id,
+                Titulo = chamado.Titulo,
+                Descricao = chamado.Descricao,
+                Status = chamado.Status,
+                Prioridade = chamado.Prioridade,
+                CategoriaId = chamado.CategoriaId,
+                SolicitanteId = chamado.SolicitanteId,
+                TecnicoResponsavelId = chamado.TecnicoResponsavelId,
+                CriadoEm = chamado.CriadoEm,
+                AtualizadoEm = chamado.AtualizadoEm,
+                FinalizadoEm = chamado.FinalizadoEm
+            };
         }
     }
 }

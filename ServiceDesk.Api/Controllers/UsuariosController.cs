@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ServiceDesk.Api.DTOs.Usuarios;
-using ServiceDesk.Domain.Entities;
 using ServiceDesk.Business.Interfaces;
+using ServiceDesk.Domain.Entities;
 
 namespace ServiceDesk.Api.Controllers
 {
@@ -21,7 +21,9 @@ namespace ServiceDesk.Api.Controllers
         {
             var usuarios = _usuarioService.Listar();
 
-            return Ok(usuarios);
+            var response = usuarios.Select(MapearParaResponse).ToList();
+
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -34,7 +36,9 @@ namespace ServiceDesk.Api.Controllers
                 return NotFound("Usuário não encontrado.");
             }
 
-            return Ok(usuario);
+            var response = MapearParaResponse(usuario);
+
+            return Ok(response);
         }
 
         [HttpPost]
@@ -64,7 +68,9 @@ namespace ServiceDesk.Api.Controllers
 
             _usuarioService.Criar(usuario, request.Senha);
 
-            return CreatedAtAction(nameof(BuscarPorId), new { id = usuario.Id }, usuario);
+            var response = MapearParaResponse(usuario);
+
+            return CreatedAtAction(nameof(BuscarPorId), new { id = usuario.Id }, response);
         }
 
         [HttpDelete("{id}")]
@@ -80,6 +86,19 @@ namespace ServiceDesk.Api.Controllers
             _usuarioService.Remover(usuario);
 
             return NoContent();
+        }
+
+        private static UsuarioResponse MapearParaResponse(Usuario usuario)
+        {
+            return new UsuarioResponse
+            {
+                Id = usuario.Id,
+                Nome = usuario.Nome,
+                Email = usuario.Email,
+                Perfil = usuario.Perfil,
+                Ativo = usuario.Ativo,
+                CriadoEm = usuario.CriadoEm
+            };
         }
     }
 }

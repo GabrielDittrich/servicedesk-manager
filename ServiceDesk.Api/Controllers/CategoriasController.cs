@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceDesk.Business.Interfaces;
 using ServiceDesk.Domain.Entities;
 using ServiceDesk.Api.DTOs.Categorias;
+using ServiceDesk.Api.DTOs.Categorias;
 
 namespace ServiceDesk.Api.Controllers
 {
@@ -21,7 +22,9 @@ namespace ServiceDesk.Api.Controllers
         {
             var categorias = _categoriaService.Listar();
 
-            return Ok(categorias);
+            var response = categorias.Select(MapearParaResponse).ToList();
+
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
@@ -34,7 +37,9 @@ namespace ServiceDesk.Api.Controllers
                 return NotFound("Categoria não encontrada.");
             }
 
-            return Ok(categoria);
+            var response = MapearParaResponse(categoria);
+
+            return Ok(response);
         }
 
         [HttpPost]
@@ -54,7 +59,9 @@ namespace ServiceDesk.Api.Controllers
 
             _categoriaService.Criar(categoria);
 
-            return CreatedAtAction(nameof(BuscarPorId), new { id = categoria.Id }, categoria);
+            var response = MapearParaResponse(categoria);
+
+            return CreatedAtAction(nameof(BuscarPorId), new { id = categoria.Id }, response);
         }
 
         [HttpPut("{id}")]
@@ -88,5 +95,18 @@ namespace ServiceDesk.Api.Controllers
 
             return NoContent();
         }
+        private static CategoriaResponse MapearParaResponse(Categoria categoria)
+        {
+            return new CategoriaResponse
+            {
+                Id = categoria.Id,
+                Nome = categoria.Nome,
+                Descricao = categoria.Descricao,
+                Ativa = categoria.Ativa,
+                CriadoEm = categoria.CriadoEm
+            };
+        }
+
     }
+
 }

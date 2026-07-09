@@ -21,7 +21,9 @@ namespace ServiceDesk.Api.Controllers
         {
             var atendimentos = _atendimentoService.ListarPorChamado(chamadoId);
 
-            return Ok(atendimentos);
+            var response = atendimentos.Select(MapearParaResponse).ToList();
+
+            return Ok(response);
         }
 
         [HttpPost]
@@ -46,7 +48,20 @@ namespace ServiceDesk.Api.Controllers
 
             _atendimentoService.Criar(atendimento);
 
-            return Created(string.Empty, atendimento);
+            var response = MapearParaResponse(atendimento);
+
+            return Created(string.Empty, response);
+        }
+        private static AtendimentoResponse MapearParaResponse(Atendimento atendimento)
+        {
+            return new AtendimentoResponse
+            {
+                Id = atendimento.Id,
+                ChamadoId = atendimento.ChamadoId,
+                TecnicoId = atendimento.TecnicoId,
+                Descricao = atendimento.Descricao,
+                CriadoEm = atendimento.CriadoEm
+            };
         }
     }
 }
