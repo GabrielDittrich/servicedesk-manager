@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceDesk.Api.DTOs.Usuarios;
 using ServiceDesk.Business.Interfaces;
 using ServiceDesk.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ServiceDesk.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsuariosController : ControllerBase

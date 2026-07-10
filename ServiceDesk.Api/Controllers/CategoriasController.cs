@@ -2,10 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceDesk.Business.Interfaces;
 using ServiceDesk.Domain.Entities;
 using ServiceDesk.Api.DTOs.Categorias;
-using ServiceDesk.Api.DTOs.Categorias;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ServiceDesk.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriasController : ControllerBase

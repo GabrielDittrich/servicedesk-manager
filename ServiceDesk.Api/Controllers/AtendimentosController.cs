@@ -2,9 +2,11 @@ using Microsoft.AspNetCore.Mvc;
 using ServiceDesk.Api.DTOs.Atendimentos;
 using ServiceDesk.Business.Interfaces;
 using ServiceDesk.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ServiceDesk.Api.Controllers
 {
+    [Authorize]
     [Route("api/chamados/{chamadoId}/atendimentos")]
     [ApiController]
     public class AtendimentosController : ControllerBase

@@ -24,7 +24,8 @@ namespace ServiceDesk.Data.Repositories
 
         public Usuario? BuscarPorEmail(string email)
         {
-            return _context.Usuarios.FirstOrDefault(usuario => usuario.Email == email);
+            return _context.Usuarios
+                .FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
         }
 
         public void Adicionar(Usuario usuario)

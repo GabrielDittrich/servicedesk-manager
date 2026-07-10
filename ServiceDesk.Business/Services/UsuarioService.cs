@@ -3,16 +3,21 @@ using ServiceDesk.Business.Interfaces;
 using ServiceDesk.Data.Repositories;
 using ServiceDesk.Domain.Entities;
 using ServiceDesk.Domain.Enums;
+using Microsoft.AspNetCore.Identity;
 
 namespace ServiceDesk.Business.Services
 {
     public class UsuarioService : IUsuarioService
     {
         private readonly UsuarioRepository _usuarioRepository;
+        private readonly IPasswordHasher<Usuario> _passwordHasher;
 
-        public UsuarioService(UsuarioRepository usuarioRepository)
+        public UsuarioService(
+            UsuarioRepository usuarioRepository,
+            IPasswordHasher<Usuario> passwordHasher)
         {
             _usuarioRepository = usuarioRepository;
+            _passwordHasher = passwordHasher;
         }
 
         public List<Usuario> Listar()
@@ -78,7 +83,7 @@ namespace ServiceDesk.Business.Services
             }
 
             // Temporário para estudo. Depois vamos trocar por hash real.
-            usuario.SenhaHash = senha;
+            usuario.SenhaHash = _passwordHasher.HashPassword(usuario, senha);
 
             _usuarioRepository.Adicionar(usuario);
         }

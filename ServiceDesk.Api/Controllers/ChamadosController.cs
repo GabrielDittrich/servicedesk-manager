@@ -3,9 +3,11 @@ using ServiceDesk.Api.DTOs.Chamados;
 using ServiceDesk.Domain.Entities;
 using ServiceDesk.Domain.Enums;
 using ServiceDesk.Business.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ServiceDesk.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ChamadosController : ControllerBase
